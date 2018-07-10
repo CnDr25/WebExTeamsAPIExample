@@ -45,7 +45,7 @@ class ApiHelper:
 
         response = requests.request("POST", self.urlStart + urlEnd , data=payload, headers=headers).json()
 
-        print(response)
+        roomID = response['id']  
 
         return roomID
 
@@ -119,25 +119,8 @@ class ApiHelper:
 #Put Access Token here
 apiHelper = ApiHelper("ACCESSTOKEN")
 
-roomName = "Test-Space-New"
+roomName = "Test_Bereich_von_API"
 
-apiHelper.setMessageToSpark(roomName, "hello", True)
+apiHelper.setMessageToSpark(roomName, "noot noot", True)
 
 apiHelper.setMessageToSpark(roomName, "This Gif was send by Python", False)
-
-
-
-
-
-
-#class TestClass:
-#    def __init__(self):
-#        pass
-#    def writeText(self, text1, text2):
-#        print(text1)
-#        sleep(2)
-#        print(text2) 
-##------------------------------------
-#tc = TestClass()
-#tc.writeText("Hello", "World")
-
