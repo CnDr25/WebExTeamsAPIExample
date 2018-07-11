@@ -6,6 +6,8 @@ class ApiHelper:
 
     accessToken = ""
     urlStart = "https://api.ciscospark.com/v1/"
+    noRoomFoundError = False
+
 
     def __init__(self, accessToken_p):
         self.accessToken = accessToken_p
@@ -17,19 +19,20 @@ class ApiHelper:
 
         roomID = self.getRoomID(roomName)
 
-        if not(isGifBot):
-            payload = "{\"roomId\": \"" + roomID + "\",\"markdown\": \"" + msg + "\"}"
-        else:
-            print("Message to GifBot will be prepared")
-            self.isGifBotInRoom(roomID)
-            payload = "{\"roomId\": \"" + roomID + "\",\"markdown\": \"<@personEmail:gifbot@webex.bot|GifBot> " + msg + "\"}"
+        if not(self.noRoomFoundError):
+            if not(isGifBot):
+                payload = "{\"roomId\": \"" + roomID + "\",\"markdown\": \"" + msg + "\"}"
+            else:
+                print("Message to GifBot will be prepared")
+                self.isGifBotInRoom(roomID)
+                payload = "{\"roomId\": \"" + roomID + "\",\"markdown\": \"<@personEmail:gifbot@webex.bot|GifMaster9000> " + msg + "\"}"
 
-        headers = {
-            'Content-Type': "application/json",
-            'Authorization': "Bearer " + self.accessToken,
-        }
+            headers = {
+                'Content-Type': "application/json",
+                'Authorization': "Bearer " + self.accessToken,
+            }
 
-        response = requests.request("POST", self.urlStart + urlEnd , data=payload, headers=headers)
+            response = requests.request("POST", self.urlStart + urlEnd , data=payload, headers=headers)
 
 
 
@@ -55,19 +58,21 @@ class ApiHelper:
         if (isRoomName):
             roomID = self.getRoomID(roomName)
         else:
+            self.noRoomFoundError = False
             roomID = roomName
         
-        urlEnd = "memberships"
+        if not(self.noRoomFoundError):
+            urlEnd = "memberships"
 
-        payload = "{\"roomId\": \"" + roomID + "\",\"personEmail\": \"" + memberMail + "\"}"
+            payload = "{\"roomId\": \"" + roomID + "\",\"personEmail\": \"" + memberMail + "\"}"
 
-        headers = {
-            'Content-Type': "application/json",
-            'Authorization': "Bearer " + self.accessToken,
-        }
+            headers = {
+                'Content-Type': "application/json",
+                'Authorization': "Bearer " + self.accessToken,
+            }
 
-        response = requests.request("POST", self.urlStart + urlEnd , data=payload, headers=headers)
-        print("Member added")
+            response = requests.request("POST", self.urlStart + urlEnd , data=payload, headers=headers)
+            print("Member added")
 
 
 
@@ -80,11 +85,21 @@ class ApiHelper:
 
         response = requests.get(self.urlStart + urlEnd , headers=headers).json()
 
+        roomFound = False
+
         for item in response["items"]:
             if(item['title'] == roomName):
                 roomID = item['id']   
-    
-        return roomID
+                roomFound = True
+
+        if(roomFound):
+            self.noRoomFoundError = False
+            return roomID
+        else:
+            self.noRoomFoundError = True
+            tempText = "No Room with the Name \"" + roomName + "\" was found"
+            print(tempText)
+            return "No_Room_was_found"
 
 
 
@@ -121,6 +136,6 @@ apiHelper = ApiHelper("ACCESSTOKEN")
 
 roomName = "Test_Bereich_von_API"
 
-apiHelper.setMessageToSpark(roomName, "noot noot", True)
+apiHelper.setMessageToSpark(roomName, "hello", True)
 
 apiHelper.setMessageToSpark(roomName, "This Gif was send by Python", False)
