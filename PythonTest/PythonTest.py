@@ -20,8 +20,8 @@ class ApiHelper:
         roomID = self.getRoomID(roomName)
 
         if not(self.noRoomFoundError):
-            roomId\": \"" + roomID + "\",\"markdown\": \"" + msg + "\"}"
-            s
+            payload = "roomId\": \"" + roomID + "\",\"markdown\": \"" + msg + "\"}"
+            
             headers = {
                 'Content-Type': "application/json",
                 'Authorization': "Bearer " + self.accessToken,
