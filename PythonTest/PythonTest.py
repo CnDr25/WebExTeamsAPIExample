@@ -14,25 +14,34 @@ class ApiHelper:
 
 
 
-    def setMessageToSpark(self, roomName, msg, isGifBot):
+    def sentMessageToSparkRoom(self, roomName, msg, isGifBot):
         urlEnd = "messages"
 
         roomID = self.getRoomID(roomName)
 
         if not(self.noRoomFoundError):
-            if not(isGifBot):
-                payload = "{\"roomId\": \"" + roomID + "\",\"markdown\": \"" + msg + "\"}"
-            else:
-                print("Message to GifBot will be prepared")
-                self.isGifBotInRoom(roomID)
-                payload = "{\"roomId\": \"" + roomID + "\",\"markdown\": \"<@personEmail:gifbot@webex.bot|GifMaster9000> " + msg + "\"}"
-
+            roomId\": \"" + roomID + "\",\"markdown\": \"" + msg + "\"}"
+            s
             headers = {
                 'Content-Type': "application/json",
                 'Authorization': "Bearer " + self.accessToken,
             }
 
             response = requests.request("POST", self.urlStart + urlEnd , data=payload, headers=headers)
+
+
+
+    def sentMessageToSparkUser(self, userMail, msg):
+        urlEnd = "messages"
+
+        payload = "{\"toPersonEmail\": \"" + roomID + "\",\"markdown\": \"" + msg + "\"}"
+        
+        headers = {
+            'Content-Type': "application/json",
+            'Authorization': "Bearer " + self.accessToken,
+        }
+
+        response = requests.request("POST", self.urlStart + urlEnd , data=payload, headers=headers)
 
 
 
@@ -100,34 +109,7 @@ class ApiHelper:
             tempText = "No Room with the Name \"" + roomName + "\" was found"
             print(tempText)
             return "No_Room_was_found"
-
-
-
-    def isGifBotInRoom(self, roomID):
-
-        gifBotMail = "gifbot@webex.bot"
-        
-        urlEnd = "memberships"
-
-        paraQuery = {"roomId": roomID}
-
-        headers = {
-            'Content-Type': "application/json",
-            'Authorization': "Bearer " + self.accessToken,
-        }
-        
-        response = requests.request("GET", self.urlStart + urlEnd , params=paraQuery, headers=headers).json()
-
-        inRoom = False
-
-        for item in response["items"]:
-            if (item['personEmail'] == gifBotMail):
-                print("GifBot is in room")
-                inRoom = True   
-        
-        if not (inRoom):
-            print("GifBot is not in room but will be added")
-            self.addMemberToRoom(roomID, gifBotMail, False)
+ 
 
 
 
@@ -136,6 +118,6 @@ apiHelper = ApiHelper("ACCESSTOKEN")
 
 roomName = "Test_Bereich_von_API"
 
-apiHelper.setMessageToSpark(roomName, "hello", True)
+apiHelper.sentMessageToSparkRoom(roomName, "Hello Group!")
 
-apiHelper.setMessageToSpark(roomName, "This Gif was send by Python", False)
+apiHelper.sentMessageToSparkUser("bob@test.com", "Hello World!")

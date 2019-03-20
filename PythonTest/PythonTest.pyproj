@@ -12,6 +12,7 @@
     <OutputPath>.</OutputPath>
     <Name>PythonTest</Name>
     <RootNamespace>PythonTest</RootNamespace>
+    <IsWindowsApplication>False</IsWindowsApplication>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)' == 'Debug' ">
     <DebugSymbols>true</DebugSymbols>
@@ -22,11 +23,8 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="apicem_config.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="PythonTest.py" />
-    <Compile Include="tabulate.py">
+    <Compile Include="RunPyServer.py">
       <SubType>Code</SubType>
     </Compile>
   </ItemGroup>
